@@ -43,3 +43,57 @@ JOIN dept_manager AS dm
 JOIN employees AS manager
   ON manager.emp_no = dm.emp_no
 WHERE de.to_date > now() AND dm.to_date > now();
+
+-- historic average salary of female managers vs. male managers
+SELECT gender, AVG(salary)
+FROM employees AS e
+JOIN dept_manager AS dm
+ON dm.emp_no = e.emp_no
+JOIN salaries AS s
+ON s.emp_no = dm.emp_no
+GROUP BY gender;
+
+-- Current average salary of female managers vs. male managers
+SELECT gender, AVG(salary)
+FROM employees AS e
+JOIN dept_manager AS dm
+ON dm.emp_no = e.emp_no
+JOIN salaries AS s
+ON s.emp_no = dm.emp_no
+WHERE dm.to_date > now() AND s.to_date > now()
+GROUP BY gender;
+
+-- Historic average salary of female workers vs. male workers
+SELECT gender, AVG(salary)
+FROM employees AS e
+JOIN salaries AS s
+ON s.emp_no = e.emp_no
+GROUP BY gender;
+
+-- Current average salary of female workers vs. male workers
+SELECT gender, AVG(salary)
+FROM employees AS e
+JOIN dept_emp AS de
+ON de.emp_no = e.emp_no
+JOIN salaries AS s
+ON s.emp_no = e.emp_no
+WHERE de.to_date > now() AND s.to_date > now()
+GROUP BY gender;
+
+-- Current count of female managers vs male managers
+SELECT gender, COUNT(*)
+FROM employees as e
+JOIN dept_manager as dm
+  ON dm.emp_no = e.emp_no
+JOIN departments as d
+  ON d.dept_no = dm.dept_no
+ WHERE dm.to_date > now()
+ GROUP BY gender;
+
+-- Current count of female engineers vs male engineers
+SELECT gender, COUNT (*)
+FROM titles AS t
+JOIN employees AS e
+ ON t.emp_no = e.emp_no
+WHERE title = 'engineer' AND t.to_date > now()
+GROUP BY gender;
